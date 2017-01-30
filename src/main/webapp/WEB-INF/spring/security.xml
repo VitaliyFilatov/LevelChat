@@ -17,12 +17,18 @@ http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 		<remember-me />
 	</http>  -->
 	<http access-denied-page="/error403.jsp">
+		<intercept-url pattern="/" access="ROLE_USER, ROLE_ADMIN" />
 		<intercept-url pattern="/index*" access="ROLE_USER, ROLE_ADMIN" />
+		<intercept-url pattern="/adminpage*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/userpage*" access="ROLE_USER, ROLE_ADMIN" />
 		<intercept-url pattern="/add*" access="ROLE_USER" />
 		<intercept-url pattern="/delete/*" access="ROLE_ADMIN" />
-		<form-login login-page="/login.jsp" default-target-url="/userpage"
-			authentication-failure-url="/login.jsp?error=true" />
+		<form-login login-page="/login" authentication-success-handler-ref="successHandler"/>
 		<logout logout-url="/logout" logout-success-url="/error403" />
+		
+		<session-management>
+  			<concurrency-control session-registry-alias="sessionRegistry"/>
+		</session-management>
 		
 		<!--<anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />  -->
 		<!-- <remember-me/> -->
@@ -41,5 +47,16 @@ http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 	<authentication-manager alias="authenticationManager">
         <authentication-provider user-service-ref="UserLogDAOImpl" />
     </authentication-manager>
+    
+    <!-- <beans:bean id="authenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+	  		<beans:property name="authenticationManager" ref="authenticationManager"/>
+	  		<beans:property name="filterProcessesUrl" value="/j_spring_security_check"/>
+	  		<beans:property name="authenticationSuccessHandler" ref="successHandler" />
+	</beans:bean> -->
+	
+	<beans:bean id="successHandler" class="net.ncteam.levelchat.authentication.AuthenticationSuccessHandlerImpl"/>
+    
+    
+	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
 
 </beans:beans>

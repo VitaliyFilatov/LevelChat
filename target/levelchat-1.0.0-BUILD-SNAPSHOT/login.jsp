@@ -54,7 +54,7 @@
             </form:form>
             <div class="login-help">
                 <a href="#">Регистрация</a> 
-                <a href="#">Восстановить пароль</a>
+                <a href="adminpage">Войти как админ</a>
             </div>
         </div>
 
