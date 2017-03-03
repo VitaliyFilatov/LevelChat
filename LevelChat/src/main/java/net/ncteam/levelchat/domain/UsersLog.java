@@ -14,29 +14,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 
 @Entity
-@Table(name = "users_log")
+@Table(name = "\"users_log\"")
 public class UsersLog {
 
+	
 	@Id
-	@Column(name = "iduserlog")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "\"iduserlog\"")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="LCSEQ")
+	@SequenceGenerator(name="LCSEQ", sequenceName="LCSEQ", allocationSize=1)
 	private int iduserlog;
 
-	@Column(name = "login")
+	@Column(name = "\"login\"")
 	private String login;
 
-	@Column(name = "password")
+	@Column(name = "\"password\"")
 	private String password;
 
-	@Column(name = "email")
+	@Column(name = "\"email\"")
 	private String email;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinTable(name = "users_log_roles",
-                joinColumns={@JoinColumn(name = "users_log_id")},
-                inverseJoinColumns={@JoinColumn(name = "role_id")})
+    @JoinTable(name = "\"users_log_roles\"",
+                joinColumns={@JoinColumn(name = "\"users_log_id\"")},
+                inverseJoinColumns={@JoinColumn(name = "\"role_id\"")})
     private Set<Role> roles = new HashSet<Role>();
 
 

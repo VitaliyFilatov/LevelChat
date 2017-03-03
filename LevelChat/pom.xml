@@ -9,7 +9,8 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.6</java-version>
-		<org.springframework-version>3.0.5.RELEASE</org.springframework-version>
+		<org.springframework-version_old>3.0.5.RELEASE</org.springframework-version_old>
+		<org.springframework-version>4.2.1.RELEASE</org.springframework-version>
 		<org.springframework.roo-version>1.0.2.RELEASE</org.springframework.roo-version>
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
@@ -33,12 +34,25 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>${org.springframework-version}</version>
+	    <groupId>org.springframework</groupId>
+	    	<artifactId>spring-web</artifactId>
+	    	<version>${org.springframework-version}</version>
 		</dependency>
+		
+		<dependency>
+    		<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-web</artifactId>
+    		<version>${org.springframework-version}</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.projectlombok</groupId>
+    		<artifactId>lombok-maven</artifactId>
+    		<version>1.16.12.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
@@ -48,6 +62,18 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>${org.springframework-version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.2.2</version>
+		</dependency>
+ 
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.2.2</version>
 		</dependency>
 
 
@@ -82,10 +108,15 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.6</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>12.1.0.2</version>
 		</dependency>
 
 		<!-- Roo dependencies -->

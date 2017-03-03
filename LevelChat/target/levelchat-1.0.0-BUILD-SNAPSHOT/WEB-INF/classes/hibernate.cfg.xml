@@ -7,5 +7,8 @@
 	<session-factory>
 		<mapping class="net.ncteam.levelchat.domain.UsersLog" />
 		<mapping class="net.ncteam.levelchat.domain.Role" />
+		<mapping class="net.ncteam.levelchat.domain.Messages" />
+		<mapping class="net.ncteam.levelchat.domain.Chat" />
+		<mapping class="net.ncteam.levelchat.domain.UserInfo" />
 	</session-factory>
 </hibernate-configuration>

@@ -1,5 +1,8 @@
 package net.ncteam.levelchat.service;
  
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
  
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +23,8 @@ public class UserLogServiceImpl implements UserLogService {
     }
  
     @Transactional
-    public void addUser(UsersLog contact) {
-        userLogDAO.addUser(contact);
+    public String addUser(UsersLog userLog) {
+        return userLogDAO.addUser(userLog);
     }
  
     @Transactional
@@ -36,7 +39,32 @@ public class UserLogServiceImpl implements UserLogService {
     }
     
     @Transactional
-    public boolean existUser(String login, String password) {
-    	return userLogDAO.existUser(login,password);
+    public boolean existUser(UsersLog userLog) {
+    	return userLogDAO.existUser(userLog);
+    }
+    
+    
+    @Transactional
+    public List<String> getMessages(String username) {
+    	return userLogDAO.getMessages(username);
+    }
+    
+    @Transactional
+    public List<String> getMessages(String username, int mid) {
+    	return userLogDAO.getMessages(username, mid);
+    }
+    
+    @Transactional
+    public void addMessage(String username, String messages, int mid) {
+    	File file = new File("c:/LOGs.txt");
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file,true);
+            fr.write("in Service\n");
+            fr.close();
+           
+        } catch (IOException e) {
+        }
+    	userLogDAO.addMessage(username, messages,mid);
     }
 }

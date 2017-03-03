@@ -2,9 +2,13 @@ package net.ncteam.levelchat.web;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.io.OutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import net.ncteam.levelchat.domain.UsersLog;
@@ -18,10 +22,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.session.SessionInformation;
+import net.ncteam.levelchat.annotation.CurrentUser;
 
 @Controller
 public class UserLogController {
@@ -50,12 +56,63 @@ public class UserLogController {
 	
 	
 	@RequestMapping("/userpage")
-	public String userPage() {
+	public String userPage(@CurrentUser User user,Map<String, Object> map) {
+		
+		//List<String> listMessages = userLogService.getMessages(user.getUsername());
+		//map.put("listMessages", userLogService.getMessages(user.getUsername()));
+		//map.put("Message", "Text of exchange...");
 		return "userpage";
 	}
+	
+	@RequestMapping(value = "/ajaxadd", method = RequestMethod.GET)
+    @ResponseBody
+    public Set<String> ajaxAddMessage(@CurrentUser User user, String mes, int mid) {
+	 
+		File file = new File("c:/LOGs.txt");
+        FileWriter fr = null;
+        userLogService.addMessage(user.getUsername(), mes, mid);
+        Set<String> records = new HashSet<String>();
+        records.add("Record #1");
+        records.add("Record #2");
+        return records;
+    }
+	
+	
+	 @RequestMapping(value = "/ajax", method = RequestMethod.GET)
+	    @ResponseBody
+	    public List<String> ajaxChat(@CurrentUser User user, int mid) {
+		 
+	        /*Set<String> records = new HashSet<String>();
+	        records.add("Record #1");
+	        records.add("Record #2");*/
+	        
+	        List<String> response = userLogService.getMessages(user.getUsername(), mid);
+	        
+	        
+	        return response;
+	    }
+	 
+	 
 	
 	@RequestMapping("/adminpage")
 	public String adminPage() {
 		return "adminpage";
+	}
+	
+	@RequestMapping("/registration")
+	public String registrationPage() {
+		return "registration";
+	}
+	
+	
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public String addContact(@ModelAttribute("usersLog") UsersLog usersLog,
+			BindingResult result) {
+
+		if(userLogService.addUser(usersLog).equals("success"))
+		{
+			return "redirect:/login";
+		}
+		return "redirect:/registration";
 	}
 }

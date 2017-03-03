@@ -1,18 +1,24 @@
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 http://www.springframework.org/schema/security
-http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
-	<http access-denied-page="/error403.jsp">
-		<intercept-url pattern="/" access="ROLE_USER, ROLE_ADMIN" />
-		<intercept-url pattern="/index*" access="ROLE_USER, ROLE_ADMIN" />
-		<intercept-url pattern="/adminpage*" access="ROLE_ADMIN" />
-		<intercept-url pattern="/userpage*" access="ROLE_USER, ROLE_ADMIN" />
-		<intercept-url pattern="/add*" access="ROLE_USER" />
-		<intercept-url pattern="/delete/*" access="ROLE_ADMIN" />
-		<form-login login-page="/login" authentication-success-handler-ref="successHandler"/>
+	
+	<http use-expressions="true">
+		<intercept-url pattern="/" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/index*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/adminpage*" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/userpage*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/add*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/delete/*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+    	<form-login login-page="/login"
+					username-parameter="j_username" 
+					password-parameter="j_password" 
+					login-processing-url="/j_spring_security_check" 
+					authentication-success-handler-ref="successHandler" 
+		/>
 		<logout logout-url="/logout" logout-success-url="/login" />
 		
 		<session-management>
@@ -21,9 +27,10 @@ http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 		
 		<!--<anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />  -->
 		<remember-me/>
+		<csrf disabled="true"/>
 	</http>
 	
-	<authentication-manager alias="authenticationManager">
+	<authentication-manager>
         <authentication-provider user-service-ref="UserLogDAOImpl" />
     </authentication-manager>
 	
