@@ -20,7 +20,11 @@ import net.ncteam.levelchat.domain.Role;
 import net.ncteam.levelchat.domain.UserInfo;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
+import org.hibernate.NonUniqueResultException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.dao.DataAccessException;
@@ -33,7 +37,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
+public class UserLogDAOImpl implements UserDetailsService, UserLogDAO  {
 
 	private SessionFactory sessionFactory;
 	
@@ -82,108 +86,6 @@ public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
 
 	}
 	
-	@SuppressWarnings("deprecation")
-	@Override
-	@Transactional
-	public UserDetails loadUserByUsername(String username)
-	       throws UsernameNotFoundException, DataAccessException
-	{
-		
-		/*UsersLog userLog = (UsersLog)sessionFactory.getCurrentSession().createQuery(
-				"from UsersLog u where u.login='"
-				+username+"'").uniqueResult();*/
-		File file = new File("c:/LOGs.txt");
-		FileWriter fr=null;
-		try
-		{
-			fr = new FileWriter(file,true);
-		}
-		catch(IOException e)
-		{}
-		
-		try
-		{
-	        fr.write("before loading of user");
-	        fr.close();
-		}
-		catch(IOException e)
-		{
-			
-		}
-		try
-		{
-			fr = new FileWriter(file,true);
-	        fr.write("lajsndlkja");
-	        fr.close();
-		}
-		catch(IOException e)
-		{
-			
-		}
-		
-		UserInfo userInfo=null;
-		try
-		{
-			userInfo = (UserInfo)sessionFactory.getCurrentSession().createQuery(
-					"u.login, u.passwor, u.roles from UserInfo u where u.login='"
-					+username+"'").uniqueResult();
-		}
-		catch (HibernateException e)
-		{
-			try
-			{
-				fr = new FileWriter(file,true);
-		        fr.write(e.getMessage());
-		        fr.close();
-			}
-			catch(IOException eio)
-			{
-				
-			}
-		}
-		finally
-		{
-			try
-			{
-				fr = new FileWriter(file,true);
-		        fr.write("after all");
-		        fr.close();
-			}
-			catch(IOException eio)
-			{
-				
-			}
-		}
-		
-		try
-		{
-			fr = new FileWriter(file,true);
-	        if(userInfo.getName()==null)
-	        {
-	            fr.write("we have been there value null after loading of user");
-	        }
-	        else
-	        {
-	        	fr.write("we have been there value not null after loading of user");
-	        }
-	        fr.close();
-		}
-		catch(IOException e)
-		{
-			
-		}
-		
-		Set<Role> roles= userInfo.getRoles();
-		Iterator<Role> it = roles.iterator();
-		Collection<GrantedAuthority> collectionGA = new ArrayList<GrantedAuthority>();
-		while (it.hasNext())
-		{
-			collectionGA.add(new SimpleGrantedAuthority(it.next().getRole()));
-		}
-		
-		UserDetails user = new User(username, userInfo.getPassword(), true, true, true, true, collectionGA);
-		return user;
-	}
 	
 	@Transactional
 	public List<String> getMessages(String username)
@@ -248,6 +150,36 @@ public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
 		mes.setMessage(message);
 		mes.setRecepient("a");
 		sessionFactory.getCurrentSession().save(mes);*/
+	}
+
+	@Transactional
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		String strQuery = "from UserInfo us where us.login='"+username+"'";
+		UserInfo userInfo=null;
+		Set<Role> roles=null;
+		try
+		{
+			Session session = sessionFactory.openSession();
+			Transaction trans = session.beginTransaction();
+			Query query = session.createQuery(strQuery);
+			userInfo = (UserInfo)query.uniqueResult();
+			roles= userInfo.getRoles();
+			trans.commit();
+			session.close();
+		}
+		catch (HibernateException e)
+		{
+		}
+	
+		Iterator<Role> it = roles.iterator();
+		Collection<GrantedAuthority> collectionGA = new ArrayList<GrantedAuthority>();
+		while (it.hasNext())
+		{
+			collectionGA.add(new SimpleGrantedAuthority(it.next().getRole()));
+		}
+		
+		UserDetails user = new User(username, userInfo.getPassword(), true, true, true, true, collectionGA);
+		return user;
 	}
 	
 	
