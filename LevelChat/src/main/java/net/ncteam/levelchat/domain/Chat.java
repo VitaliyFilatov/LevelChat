@@ -3,104 +3,100 @@ package net.ncteam.levelchat.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "\"chat\"")
+@Table(name = "CHAT")
 public class Chat {
+    @Id
+    @Column(name = "CHAT_ID")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="LCSEQ")
+	@SequenceGenerator(name="LCSEQ", sequenceName="LCSEQ", allocationSize=1)
+    private long chatId;
 
-	
-	@Id
-	@Column(name = "\"idchat\"")
-	private int idchat;
+    @Column(name = "NAME_CHAT", length = 100)
+    private String nameChat;
 
-	@Column(name = "\"first_human\"")
-	private String first_human;
-	
-	@Column(name = "\"second_human\"")
-	private String second_human;
-	
-	@Column(name = "\"countMessage\"")
-	private String countMessage;
+    @Column(name = "STATUS_CHAT", length = 20)
+    private char statusChat;
 
-	@Column(name = "\"firstStatus\"")
-	private char firstStatus;
+    @Column(name = "LIST_ID")
+    private long listId;
 
-	@Column(name = "\"secondStatus\"")
-	private char secondStatus;
-	
-	@Column(name = "\"name_lvl\"")
-	private String name_lvl;
-	
-	@Column(name = "\"id_mess\"")
-	private int id_mess;
+    @ManyToOne
+   	@JoinColumn(name = "LEVEL_ID", nullable = false)
+    private Levels level;
 
-	public int getIdchat() {
-		return idchat;
-	}
+    @Column(name = "PERSONAL_CHAT")
+    private boolean isPersonalChat;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chat")
+    public Set<ChatGroup> chatGroups = new HashSet<ChatGroup>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chat")
+    public Set<Messages> messages = new HashSet<Messages>();
 
-	public void setIdchat(int idchat) {
-		this.idchat = idchat;
-	}
+    public long getChatId() {
+        return chatId;
+    }
 
-	public String getFirst_human() {
-		return first_human;
-	}
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
 
-	public void setFirst_human(String first_human) {
-		this.first_human = first_human;
-	}
+    public String getNameChat() {
+        return nameChat;
+    }
 
-	public String getSecond_human() {
-		return second_human;
-	}
+    public void setNameChat(String nameChat) {
+        this.nameChat = nameChat;
+    }
 
-	public void setSecond_human(String second_human) {
-		this.second_human = second_human;
-	}
+    public char getStatusChat() {
+        return statusChat;
+    }
 
-	public String getCountMessage() {
-		return countMessage;
-	}
+    public void setStatusChat(char statusChat) {
+        this.statusChat = statusChat;
+    }
 
-	public void setCountMessage(String countMessage) {
-		this.countMessage = countMessage;
-	}
+    public long getListId() {
+        return listId;
+    }
 
-	public char getFirstStatus() {
-		return firstStatus;
-	}
+    public void setListId(long listId) {
+        this.listId = listId;
+    }
 
-	public void setFirstStatus(char firstStatus) {
-		this.firstStatus = firstStatus;
-	}
+    public Levels getLevel() {
+        return level;
+    }
 
-	public char getSecondStatus() {
-		return secondStatus;
-	}
+    public void setLevel(Levels level) {
+        this.level = level;
+    }
 
-	public void setSecondStatus(char secondStatus) {
-		this.secondStatus = secondStatus;
-	}
+    public boolean isPersonalChat() {
+        return isPersonalChat;
+    }
 
-	public String getName_lvl() {
-		return name_lvl;
-	}
-
-	public void setName_lvl(String name_lvl) {
-		this.name_lvl = name_lvl;
-	}
-
-	public int getId_mess() {
-		return id_mess;
-	}
-
-	public void setId_mess(int id_mess) {
-		this.id_mess = id_mess;
-	}
-	
-	
+    public void setPersonalChat(boolean personalChat) {
+        isPersonalChat = personalChat;
+    }
+    
+    public Set<ChatGroup> getChatGroups() {
+        return chatGroups;
+    }
+ 
+    public void setChatGroups(Set<ChatGroup> chatGroups) {
+        this.chatGroups = chatGroups;
+    }
+    
+    public Set<Messages> getMessages() {
+        return messages;
+    }
+ 
+    public void setMessages(Set<Messages> messages) {
+        this.messages = messages;
+    }
 }

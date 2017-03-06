@@ -1,48 +1,68 @@
 package net.ncteam.levelchat.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.EmbeddedId;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "\"messages\"")
+@Table(name = "MESSAGES")
 public class Messages {
+    @Id
+    @Column(name = "MESSAGE_ID")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="LCSEQ")
+	@SequenceGenerator(name="LCSEQ", sequenceName="LCSEQ", allocationSize=1)
+    private long messageId;
 
-	
-	@EmbeddedId
-	private MessageKey pk_idmess;
+    @Column(name = "TWXT_MSG", length = 4000)
+    private long textMessage;
 
-	@Column(name = "\"message\"")
-	private String message;
-	
-	@Column(name = "\"recepient\"")
-	private String recepient;
+    @ManyToOne
+   	@JoinColumn(name = "CHAT_ID", nullable = false)
+    private Chat chat;
 
-	public String getMessage() {
-		return this.message;
-	}
-	
-	public void setMessageKey(MessageKey mk)
-	{
-		this.pk_idmess=mk;
-	}
-	
-	public MessageKey getMessageKey() {
-		return this.pk_idmess;
-	}
+    @ManyToOne
+   	@JoinColumn(name = "USER_ID", nullable = false)
+    private UserInfo userInfo;
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    @ManyToOne
+   	@JoinColumn(name = "DATA_ID", nullable = false)
+    private UserData userData;
 
-	public String getRecepient() {
-		return this.recepient;
-	}
+    public long getMessageId() {
+        return messageId;
+    }
 
-	public void setRecepient(String recepient) {
-		this.recepient = recepient;
-	}
-	
+    public void setMessageId(long messageId) {
+        this.messageId = messageId;
+    }
+
+    public long getTextMessage() {
+        return textMessage;
+    }
+
+    public void setTextMessage(long textMessage) {
+        this.textMessage = textMessage;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
+    }
 }

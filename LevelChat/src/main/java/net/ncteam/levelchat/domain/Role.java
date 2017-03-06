@@ -16,22 +16,22 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
-@Table(name = "\"roles\"")
+@Table(name = "ROLES")
 public class Role {
 
 	@Id
-	@Column(name = "\"id\"")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID")
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Column(name = "\"role\"")
+	@Column(name = "ROLE")
 	private String role;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinTable(name = "\"users_log_roles\"",
-                joinColumns={@JoinColumn(name = "\"role_id\"")},
-                inverseJoinColumns={@JoinColumn(name = "\"users_log_id\"")})
-    private Set<UsersLog> users = new HashSet<UsersLog>();
+    @JoinTable(name = "USERS_ROLES",
+                joinColumns={@JoinColumn(name = "ROLE_ID")},
+                inverseJoinColumns={@JoinColumn(name = "USER_ID")})
+    private Set<UserInfo> users = new HashSet<UserInfo>();
 
 
 	public int getId() {
@@ -51,11 +51,11 @@ public class Role {
 	}
 
 	
-	public Set<UsersLog> getUsers() {
+	public Set<UserInfo> getUsers() {
         return users;
     }
  
-    public void setUsers(Set<UsersLog> users) {
+    public void setUsers(Set<UserInfo> users) {
         this.users = users;
     }
 }

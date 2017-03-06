@@ -17,6 +17,7 @@ import net.ncteam.levelchat.domain.UsersLog;
 import net.ncteam.levelchat.domain.MessageKey;
 import net.ncteam.levelchat.domain.Messages;
 import net.ncteam.levelchat.domain.Role;
+import net.ncteam.levelchat.domain.UserInfo;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.HibernateException;
@@ -61,7 +62,8 @@ public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
 	}
 	
 	public boolean existUser(UsersLog userLog) {
-		return sessionFactory.getCurrentSession().find("from UsersLog where login='"+userLog.getLogin()+"'").isEmpty();
+		//return sessionFactory.getCurrentSession().find("from UsersLog where login='"+userLog.getLogin()+"'").isEmpty();
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,12 +89,91 @@ public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
 	       throws UsernameNotFoundException, DataAccessException
 	{
 		
-		UsersLog userLog = (UsersLog)sessionFactory.getCurrentSession().createQuery(
+		/*UsersLog userLog = (UsersLog)sessionFactory.getCurrentSession().createQuery(
 				"from UsersLog u where u.login='"
-				+username+"'").uniqueResult();
+				+username+"'").uniqueResult();*/
+		File file = new File("c:/LOGs.txt");
+		FileWriter fr=null;
+		try
+		{
+			fr = new FileWriter(file,true);
+		}
+		catch(IOException e)
+		{}
 		
+		try
+		{
+	        fr.write("before loading of user");
+	        fr.close();
+		}
+		catch(IOException e)
+		{
+			
+		}
+		try
+		{
+			fr = new FileWriter(file,true);
+	        fr.write("lajsndlkja");
+	        fr.close();
+		}
+		catch(IOException e)
+		{
+			
+		}
 		
-		Set<Role> roles= userLog.getRoles();
+		UserInfo userInfo=null;
+		try
+		{
+			userInfo = (UserInfo)sessionFactory.getCurrentSession().createQuery(
+					"u.login, u.passwor, u.roles from UserInfo u where u.login='"
+					+username+"'").uniqueResult();
+		}
+		catch (HibernateException e)
+		{
+			try
+			{
+				fr = new FileWriter(file,true);
+		        fr.write(e.getMessage());
+		        fr.close();
+			}
+			catch(IOException eio)
+			{
+				
+			}
+		}
+		finally
+		{
+			try
+			{
+				fr = new FileWriter(file,true);
+		        fr.write("after all");
+		        fr.close();
+			}
+			catch(IOException eio)
+			{
+				
+			}
+		}
+		
+		try
+		{
+			fr = new FileWriter(file,true);
+	        if(userInfo.getName()==null)
+	        {
+	            fr.write("we have been there value null after loading of user");
+	        }
+	        else
+	        {
+	        	fr.write("we have been there value not null after loading of user");
+	        }
+	        fr.close();
+		}
+		catch(IOException e)
+		{
+			
+		}
+		
+		Set<Role> roles= userInfo.getRoles();
 		Iterator<Role> it = roles.iterator();
 		Collection<GrantedAuthority> collectionGA = new ArrayList<GrantedAuthority>();
 		while (it.hasNext())
@@ -100,7 +181,7 @@ public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
 			collectionGA.add(new SimpleGrantedAuthority(it.next().getRole()));
 		}
 		
-		UserDetails user = new User(username, userLog.getPassword(), true, true, true, true, collectionGA);
+		UserDetails user = new User(username, userInfo.getPassword(), true, true, true, true, collectionGA);
 		return user;
 	}
 	
@@ -162,11 +243,11 @@ public class UserLogDAOImpl implements UserLogDAO, UserDetailsService {
 		MessageKey mk = new MessageKey();
 		mk.setId_mess(idMess);
 		mk.setId(mid+1);
-		Messages mes = new Messages();
+		/*Messages mes = new Messages();
 		mes.setMessageKey(mk);
 		mes.setMessage(message);
 		mes.setRecepient("a");
-		sessionFactory.getCurrentSession().save(mes);
+		sessionFactory.getCurrentSession().save(mes);*/
 	}
 	
 	
