@@ -20,18 +20,18 @@ import javax.persistence.ManyToMany;
 public class Role {
 
 	@Id
-	@Column(name = "ID")
+	@Column(name = "ROLE_ID")
 	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@Column(name = "ROLE")
 	private String role;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	/*@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "USERS_ROLES",
                 joinColumns={@JoinColumn(name = "ROLE_ID")},
                 inverseJoinColumns={@JoinColumn(name = "USER_ID")})
-    private Set<UserInfo> users = new HashSet<UserInfo>();
+    private Set<UserInfo> users = new HashSet<UserInfo>();*/
 
 
 	public int getId() {
@@ -51,11 +51,11 @@ public class Role {
 	}
 
 	
-	public Set<UserInfo> getUsers() {
+	/*public Set<UserInfo> getUsers() {
         return users;
     }
  
     public void setUsers(Set<UserInfo> users) {
         this.users = users;
-    }
+    }*/
 }

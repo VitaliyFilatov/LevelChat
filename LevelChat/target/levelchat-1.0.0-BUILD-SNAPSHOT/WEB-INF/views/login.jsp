@@ -53,7 +53,7 @@
                  <input type="submit" name="button_login" class="login login-submit" value="Войти">
             </form:form>
             <div class="login-help">
-                <a href="#">Регистрация</a> 
+                <a href="registration">Регистрация</a> 
                 <a href="adminpage">Войти как админ</a>
             </div>
         </div>

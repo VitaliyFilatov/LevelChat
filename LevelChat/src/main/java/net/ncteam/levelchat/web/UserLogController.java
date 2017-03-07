@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import net.ncteam.levelchat.domain.UserInfo;
 import net.ncteam.levelchat.domain.UsersLog;
 import net.ncteam.levelchat.service.UserLogService;
 
@@ -46,6 +47,7 @@ public class UserLogController {
 	
 	@RequestMapping("/login")
 	public String login() {
+		System.out.println("v222222222");
 		return "login";
 	}
 	
@@ -106,10 +108,10 @@ public class UserLogController {
 	
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String addContact(@ModelAttribute("usersLog") UsersLog usersLog,
+	public String addContact(@ModelAttribute("usersLog") UserInfo userInfo,
 			BindingResult result) {
 
-		if(userLogService.addUser(usersLog).equals("success"))
+		if(userLogService.addUser(userInfo).equals("success"))
 		{
 			return "redirect:/login";
 		}

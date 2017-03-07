@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
  
 import net.ncteam.levelchat.dao.UserLogDAO;
+import net.ncteam.levelchat.domain.UserInfo;
 import net.ncteam.levelchat.domain.UsersLog;
  
 @Service
@@ -22,39 +23,29 @@ public class UserLogServiceImpl implements UserLogService {
     	this.userLogDAO = userLogDAO;
     }
  
-    @Transactional
-    public String addUser(UsersLog userLog) {
-        return userLogDAO.addUser(userLog);
+    public String addUser(UserInfo userInfo) {
+        return userLogDAO.addUser(userInfo);
     }
  
-    @Transactional
     public List<UsersLog> listUser() {
  
         return userLogDAO.listUser();
     }
  
-    @Transactional
     public void removeUser(Integer iduserlog) {
     	userLogDAO.removeUser(iduserlog);
     }
     
-    @Transactional
-    public boolean existUser(UsersLog userLog) {
-    	return userLogDAO.existUser(userLog);
-    }
     
     
-    @Transactional
     public List<String> getMessages(String username) {
     	return userLogDAO.getMessages(username);
     }
     
-    @Transactional
     public List<String> getMessages(String username, int mid) {
     	return userLogDAO.getMessages(username, mid);
     }
     
-    @Transactional
     public void addMessage(String username, String messages, int mid) {
     	File file = new File("c:/LOGs.txt");
         FileWriter fr = null;

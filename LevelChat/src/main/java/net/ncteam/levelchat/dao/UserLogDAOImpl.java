@@ -46,18 +46,26 @@ public class UserLogDAOImpl implements UserDetailsService, UserLogDAO  {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public String addUser(UsersLog userLog) {
+	@Transactional
+	public String addUser(UserInfo userInfo) {
 		
-		if (existUser(userLog))
+		if (existUser(userInfo))
 		{
 			Role role=new Role();
 			role.setRole("ROLE_USER");
-			role.setId(2);
+			role.setId(1);
 			Set<Role> setRole = new HashSet<Role>();
 			setRole.add(role);
-			userLog.setRoles(setRole);
-			sessionFactory.getCurrentSession().save(userLog);
-			return "success";
+			userInfo.setRoles(setRole);
+			try
+			{
+				sessionFactory.getCurrentSession().save(userInfo);
+				return "success";
+			}
+			catch(HibernateException e)
+			{
+				return e.getMessage();
+			}
 		}
 		else
 		{
@@ -65,9 +73,12 @@ public class UserLogDAOImpl implements UserDetailsService, UserLogDAO  {
 		}
 	}
 	
-	public boolean existUser(UsersLog userLog) {
+	@Transactional
+	public boolean existUser(UserInfo userInfo) {
 		//return sessionFactory.getCurrentSession().find("from UsersLog where login='"+userLog.getLogin()+"'").isEmpty();
-		return true;
+		//return true;
+		return sessionFactory.getCurrentSession().createQuery("from UsersLog where login='"
+		+userInfo.getLogin()+"'").list().isEmpty();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -154,21 +165,19 @@ public class UserLogDAOImpl implements UserDetailsService, UserLogDAO  {
 
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		String strQuery = "from UserInfo us where us.login='"+username+"'";
+		String strQuery = "from UserInfo u where u.login='"+username+"'";
 		UserInfo userInfo=null;
 		Set<Role> roles=null;
 		try
 		{
-			Session session = sessionFactory.openSession();
-			Transaction trans = session.beginTransaction();
+			Session session = sessionFactory.getCurrentSession();
 			Query query = session.createQuery(strQuery);
 			userInfo = (UserInfo)query.uniqueResult();
 			roles= userInfo.getRoles();
-			trans.commit();
-			session.close();
 		}
 		catch (HibernateException e)
 		{
+			e=e;
 		}
 	
 		Iterator<Role> it = roles.iterator();

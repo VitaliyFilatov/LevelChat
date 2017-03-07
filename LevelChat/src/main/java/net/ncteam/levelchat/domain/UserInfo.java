@@ -48,13 +48,13 @@ public class UserInfo {
     @Column(name = "PHOTO_AVA")
     private Blob photo_ava;
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "USERS_ROLES",
                 joinColumns={@JoinColumn(name = "USER_ID")},
                 inverseJoinColumns={@JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles = new HashSet<Role>();
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "USER_INTEREST",
                 joinColumns={@JoinColumn(name = "USER_ID")},
                 inverseJoinColumns={@JoinColumn(name = "INTEREST_ID")})
