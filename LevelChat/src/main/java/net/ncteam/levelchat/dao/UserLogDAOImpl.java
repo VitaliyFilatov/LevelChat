@@ -34,6 +34,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -41,16 +42,23 @@ public class UserLogDAOImpl implements UserDetailsService, UserLogDAO  {
 
 	private SessionFactory sessionFactory;
 	
+	private BCryptPasswordEncoder bcryptEncoder;
+	
 	public void setSessionFactory (SessionFactory sessionFactory)
 	{
 		this.sessionFactory = sessionFactory;
 	}
+	
+	public void setBcryptEncoder(BCryptPasswordEncoder bcryptEncoder) {
+        this.bcryptEncoder = bcryptEncoder;
+    }
 
 	@Transactional
 	public String addUser(UserInfo userInfo) {
 		
 		if (existUser(userInfo))
 		{
+			userInfo.setPassword(bcryptEncoder.encode(userInfo.getPassword()));
 			Role role=new Role();
 			role.setRole("ROLE_USER");
 			role.setId(1);

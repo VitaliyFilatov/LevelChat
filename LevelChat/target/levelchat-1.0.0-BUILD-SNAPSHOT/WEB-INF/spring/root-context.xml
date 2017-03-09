@@ -36,7 +36,10 @@
 	<bean id="UserLogDAOImpl"
 		class="net.ncteam.levelchat.dao.UserLogDAOImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="bcryptEncoder" ref="bcryptEncoder" />
 	</bean>
+	
+	<bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 	
 	
 	
